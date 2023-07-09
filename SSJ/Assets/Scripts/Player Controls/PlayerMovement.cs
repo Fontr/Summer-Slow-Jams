@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.U2D;
 using UnityEngine.UIElements;
 
 public class PlayerMovement : MonoBehaviour
@@ -9,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Move")]
     [SerializeField] private float fixedSpeed = 300.0f;
     [SerializeField] private float isMoving = 1;
-    [SerializeField] private Rigidbody2D rb;
+    private Rigidbody2D rb;
     private Vector2 movement;
     private float speed;
     private Vector2 moveDirection;
@@ -21,7 +22,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float dashCooldown = 2f;
     private bool isDashing, isDashingOnCD = false;
 
-
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
 
     void Update()
     {
