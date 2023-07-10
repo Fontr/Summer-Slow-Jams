@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class SimpleEnemy : MonoBehaviour
 {
     private Rigidbody2D rb;
-    public EnemyClass enemy;
+    private EnemyClass enemy;
 
     private float PLdistance;
 
@@ -14,6 +14,7 @@ public class SimpleEnemy : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        enemy = GetComponent<EnemyClass>();
     }
 
     void FixedUpdate()
