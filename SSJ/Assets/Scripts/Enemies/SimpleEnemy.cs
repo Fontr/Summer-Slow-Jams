@@ -8,8 +8,7 @@ public class SimpleEnemy : MonoBehaviour
     private Rigidbody2D rb;
     private EnemyClass enemy;
 
-    private float PLdistance;
-
+    private float viewDist = 15.0f;
 
     void Start()
     {
@@ -19,9 +18,13 @@ public class SimpleEnemy : MonoBehaviour
 
     void FixedUpdate()
     {
-        PLdistance = Vector2.Distance(transform.position, enemy.player.transform.position);
-        Vector2 direction = (enemy.player.transform.position - transform.position).normalized;
+        float PLdistance = Vector2.Distance(transform.position, enemy.player.transform.position);
         enemy.MoveToPlayer();
-        //rb.MovePosition(direction);
+        /*
+        if (Input.GetKey(KeyCode.H))
+        {
+            enemy.FollowPlayer();
+        }*/
+        
     }
 }
