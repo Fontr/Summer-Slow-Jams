@@ -9,10 +9,33 @@ public class EnemyClass : MonoBehaviour
     private bool isMoving;
 
     public GameObject player;
-    private float viewDist = 15.0f;
+
+    private Ray ray;
+    //private float PLdistance;
 
     public void MoveToPlayer()
     {
         transform.position = Vector2.MoveTowards(this.transform.position, player.transform.position, speed * Time.fixedDeltaTime);
     }
+
+    /*
+    public void FollowPlayer()
+    {
+        Vector2 direction = (player.transform.position - transform.position).normalized;
+        ray = new Ray(transform.position, direction);
+        Debug.DrawRay(transform.position, direction, Color.yellow);
+
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            Debug.Log(hit.transform);
+        }
+    }
+
+    /*
+    public void FindPath()
+    {
+        PLdistance = Vector2.Distance(transform.position, player.transform.position);
+        Vector2 direction = (player.transform.position - transform.position).normalized;
+    }   */
 }
