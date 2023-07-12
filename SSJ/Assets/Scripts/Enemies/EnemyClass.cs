@@ -9,28 +9,37 @@ public class EnemyClass : MonoBehaviour
     private bool isMoving;
 
     public GameObject player;
+    private Vector2 LastPlayerPos; // ѕоследнее видимое положение игрока
 
-    private Ray ray;
-    //private float PLdistance;
-
+    // ƒвижение пр€мо к игроку
+    //====================================================================================
     public void MoveToPlayer()
     {
         transform.position = Vector2.MoveTowards(this.transform.position, player.transform.position, speed * Time.fixedDeltaTime);
     }
+    //====================================================================================
 
-    /*
-    public void FollowPlayer()
+
+    // Ќаправл€етс€ к последней точке, где игрока было видно
+    //====================================================================================
+    public void FollowPlayer(float dist)
     {
         Vector2 direction = (player.transform.position - transform.position).normalized;
-        ray = new Ray(transform.position, direction);
-        Debug.DrawRay(transform.position, direction, Color.yellow);
+        Debug.DrawRay(transform.position, direction*dist, Color.yellow);
 
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, distance:dist);
+        if (hit.collider.gameObject.name == "Player")
         {
-            Debug.Log(hit.transform);
+            LastPlayerPos = player.transform.position;
+            MoveToPlayer();
+        }
+        else
+        {
+            transform.position = Vector2.MoveTowards(this.transform.position, LastPlayerPos, speed * Time.fixedDeltaTime);
         }
     }
+    //====================================================================================
+
 
     /*
     public void FindPath()

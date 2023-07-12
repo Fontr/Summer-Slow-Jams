@@ -8,23 +8,28 @@ public class SimpleEnemy : MonoBehaviour
     private Rigidbody2D rb;
     private EnemyClass enemy;
 
-    private float viewDist = 15.0f;
+    public float viewDist = 15.0f;
 
+    //====================================================================================
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         enemy = GetComponent<EnemyClass>();
     }
+    //====================================================================================
 
+
+    //====================================================================================
     void FixedUpdate()
     {
         float PLdistance = Vector2.Distance(transform.position, enemy.player.transform.position);
-        enemy.MoveToPlayer();
-        /*
-        if (Input.GetKey(KeyCode.H))
+        
+        if (PLdistance < viewDist)
         {
-            enemy.FollowPlayer();
-        }*/
+            enemy.FollowPlayer(viewDist);
+        }
+        
         
     }
+    //====================================================================================
 }
