@@ -6,16 +6,22 @@ public class EnemyClass : MonoBehaviour
 {
     public float maxHP = 100.0f;
     public float speed = 3.0f;
-    private bool isMoving;
+    public bool EnemyActive = false;
 
     public GameObject player;
-    private Vector2 LastPlayerPos; // Последнее видимое положение игрока
+    public Vector2 LastPlayerPos; // Последнее видимое положение игрока
+    public bool PlayerFound = false; // Был ли обнаружен игрок
+    private RaycastHit2D hit;
 
-    // Движение прямо к игроку
+
+    // Движение прямо к точке
     //====================================================================================
-    public void MoveToPlayer()
+    public void MoveToPoint(Vector2 point)
     {
-        transform.position = Vector2.MoveTowards(this.transform.position, player.transform.position, speed * Time.fixedDeltaTime);
+        if (Vector2.Distance(transform.position, point) > 0.2f)
+        {
+            transform.position = Vector2.MoveTowards(this.transform.position, point, speed * Time.fixedDeltaTime);
+        }
     }
     //====================================================================================
 
@@ -24,27 +30,41 @@ public class EnemyClass : MonoBehaviour
     //====================================================================================
     public void FollowPlayer(float dist)
     {
+        float PLdistance = Vector2.Distance(transform.position, player.transform.position);
+
         Vector2 direction = (player.transform.position - transform.position).normalized;
         Debug.DrawRay(transform.position, direction*dist, Color.yellow);
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, distance:dist);
-        if (hit.collider.gameObject.name == "Player")
+        hit = Physics2D.Raycast(transform.position, direction, distance:dist);
+        if (hit != false)
         {
-            LastPlayerPos = player.transform.position;
-            MoveToPlayer();
-        }
-        else
-        {
-            transform.position = Vector2.MoveTowards(this.transform.position, LastPlayerPos, speed * Time.fixedDeltaTime);
+            if (hit.collider.gameObject.name == "Player" && PLdistance < dist)
+            {
+                EnemyActive = true;
+                PlayerFound = true;
+                LastPlayerPos = player.transform.position;
+            }
         }
     }
     //====================================================================================
 
 
-    /*
-    public void FindPath()
+    // Патрулирование местности
+    //====================================================================================
+    private float waitTime;
+    private Vector2 randomSpot;
+    public void Patrol(float PRange, float stWaitTime)
     {
-        PLdistance = Vector2.Distance(transform.position, player.transform.position);
-        Vector2 direction = (player.transform.position - transform.position).normalized;
-    }   */
+        if (waitTime <= 0)
+        {
+            waitTime = stWaitTime;
+            randomSpot = new Vector2(transform.position.x + Random.Range(-PRange, PRange), transform.position.y + Random.Range(-PRange, PRange));
+        }
+        else
+        {
+            waitTime -= Time.deltaTime;
+            MoveToPoint(randomSpot);
+        }
+    }
+    //====================================================================================
 }
