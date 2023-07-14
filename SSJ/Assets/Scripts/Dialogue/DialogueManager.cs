@@ -8,12 +8,13 @@ using UnityEngine.UI;
 public class DialogueManager : MonoBehaviour
 {
     private Queue<string> sentences;
-    public bool dialogueIsActive = false, textIsTyping = false;
-    public TextMeshProUGUI nameText;
-    public TextMeshProUGUI dialogueText;
-    public Animator animator;
+    private bool dialogueIsActive = false, textIsTyping = false;
+    [SerializeField] private TextMeshProUGUI nameText;
+    [SerializeField] private TextMeshProUGUI dialogueText;
+    [SerializeField] private Animator animator;
+    //скорость печати текста
     private float speedTyping = 0.05f;
-    public Button button;
+    [SerializeField] private Button button;
     void Start()
     {
         sentences = new Queue<string>();
@@ -21,11 +22,13 @@ public class DialogueManager : MonoBehaviour
 
     void Update()
     {
+        //отслеживание активен ли диалог
         if (dialogueIsActive) {
             if (Input.GetKeyDown(KeyCode.Space)) { DisplayNextSentence(); }
         }
     }
 
+    //запуск диалога
     public void StartDialogue(Dialogue dialogue)
     {
         dialogueIsActive = true;
@@ -45,6 +48,7 @@ public class DialogueManager : MonoBehaviour
 
     }
 
+    //перебор сообщений диалога
     public void DisplayNextSentence()
     {
         if (textIsTyping)
@@ -77,6 +81,7 @@ public class DialogueManager : MonoBehaviour
         speedTyping = 0.05f;
     }
 
+    //конец диалога
     private void EndDialogue()
     {
         dialogueIsActive = false;
