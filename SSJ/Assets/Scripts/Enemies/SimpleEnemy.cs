@@ -13,13 +13,15 @@ public class SimpleEnemy : MonoBehaviour
     public float PRange = 3f; // Радиус патрулирования
     public float startWaitTime = 3f; // Время ожидания в точке патрулирования
     private float timeBeforePatrol = 5f;
+    private float activationTime = 0.75f;
 
     //====================================================================================
     void Start()
     {
-        //rb = GetComponent<Rigidbody2D>();
+        //enemy.rb = GetComponent<Rigidbody2D>();
         enemy = GetComponent<EnemyClass>();
-        enemy.LastPlayerPos = this.transform.position;
+        enemy.targetPoint = this.transform.position;
+        enemy.animator = GetComponent<Animator>();
     }
     //====================================================================================
 
@@ -27,17 +29,24 @@ public class SimpleEnemy : MonoBehaviour
     //====================================================================================
     void FixedUpdate()
     {
+        if (!enemy.EnemyActive) { enemy.ChangeAnimation("Idle(NotActive)"); }
+
         enemy.FollowPlayer(viewDist);
 
-        if (Vector2.Distance(this.transform.position, enemy.LastPlayerPos) < 0.4f)
+        if (Vector2.Distance(this.transform.position, enemy.targetPoint) < 0.4f)
         {
             enemy.PlayerFound = false;
         }
 
         if (enemy.PlayerFound)
         {
-            enemy.MoveToPoint(enemy.LastPlayerPos);
-            timeBeforePatrol = 5f;
+            if (activationTime <= 0f)
+            {
+                enemy.CheckWalls();
+                enemy.MoveToPoint(enemy.targetPoint);
+                timeBeforePatrol = 5f;
+            }
+            else { activationTime -= Time.fixedDeltaTime; }
         }
 
         if (enemy.PlayerFound == false && enemy.EnemyActive)
