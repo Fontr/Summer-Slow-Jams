@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class EnemyClass : MonoBehaviour
 {
-    public float maxHP = 100.0f;
     public float speed = 3f;
     public bool EnemyActive = false;
+    public bool isDamaging = false;
 
     public GameObject player;
     public Rigidbody2D rb;
@@ -33,13 +33,14 @@ public class EnemyClass : MonoBehaviour
     //====================================================================================
     public void MoveToPoint(Vector2 point)
     {
-        ChangeAnimation("Walk");
+        if (isDamaging == false) {ChangeAnimation("Walk"); }
         if (correctPoint != new Vector2(0,0)) { point = correctPoint;}
         Debug.DrawRay(curPos, point-curPos, Color.red);
+        if (point.x > curPos.x) { GetComponent<SpriteRenderer>().flipX = true; }
+        else { GetComponent<SpriteRenderer>().flipX = false; }
         if (Vector2.Distance(curPos, point) > 0.2f)
         {
             transform.position = Vector2.MoveTowards(transform.position, point, speed * Time.fixedDeltaTime);
-            //rb.velocity = point * speed * Time.fixedDeltaTime;
         }
     }
     //====================================================================================
@@ -69,6 +70,7 @@ public class EnemyClass : MonoBehaviour
                 PlayerFound = true;
                 LastPlayerPos = player.transform.position;
                 targetPoint = LastPlayerPos;
+                checkPoint = 0;
             }
         }
     }
@@ -78,21 +80,59 @@ public class EnemyClass : MonoBehaviour
     // Патрулирование местности
     //====================================================================================
     private float waitTime;
+    private int checkPoint;
+    private float deactivationTime;
     public void Patrol(float PRange, float stWaitTime)
     {
-        if (waitTime <= 0)
+        if (checkPoint == 5)
         {
-            waitTime = stWaitTime;
-            targetPoint = new Vector2(transform.position.x + 2f*Random.Range(-PRange, PRange), transform.position.y + 2f*Random.Range(-PRange, PRange));
+            ChangeAnimation("Deactivation");
+            if (deactivationTime < 0) 
+            {
+                EnemyActive = false;
+            }
+            else { deactivationTime -= Time.fixedDeltaTime; }
         }
         else
         {
-            waitTime -= Time.deltaTime;
-            MoveToPoint(targetPoint);
+            deactivationTime = 0.73f;
+            if (waitTime <= 0)
+            {
+                waitTime = stWaitTime;
+                targetPoint = new Vector2(curPos.x + Random.Range(-PRange, PRange), curPos.y + Random.Range(-PRange, PRange));
+                RaycastHit2D pHit = Physics2D.Raycast(curPos, targetPoint - curPos, PRange);
+                while (pHit==true)
+                {
+                    Debug.Log("!!!!");
+                    targetPoint = new Vector2(curPos.x + Random.Range(-PRange, PRange), curPos.y + Random.Range(-PRange, PRange));
+                    pHit = Physics2D.Raycast(curPos, targetPoint - curPos, PRange+1f);
+                }
+                checkPoint++;
+            }
+            else
+            {
+                waitTime -= Time.fixedDeltaTime;
+                MoveToPoint(targetPoint);
+            }
         }
+
     }
     //====================================================================================
 
+
+    // Удар в ближнем бою
+    //====================================================================================
+    public IEnumerator Damage(float dmCd)
+    {
+        isDamaging = true;
+        ChangeAnimation("Damage");
+        yield return new WaitForSeconds(0.60f);
+        player.GetComponentInChildren<HPEvents>().HPLoss();
+        ChangeAnimation("Walk");
+        yield return new WaitForSeconds(dmCd);
+        isDamaging = false;
+    }
+    //====================================================================================
 
     // Избегание стен
     //====================================================================================
