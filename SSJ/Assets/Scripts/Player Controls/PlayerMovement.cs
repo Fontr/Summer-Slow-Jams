@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.U2D;
 using UnityEngine.UIElements;
+using static UnityEditor.Rendering.FilterWindow;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -14,13 +15,15 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 movement;
     private float speed;
     private Vector2 moveDirection;
-
+    [SerializeField] private Animator animator;
 
     [Header("Dash")]
     [SerializeField] float dashSpeed = 1000f;
     [SerializeField] float dashDuration = 0.5f;
     [SerializeField] float dashCooldown = 2f;
     private bool isDashing, isDashingOnCD = false;
+
+    public bool isDialog = false;
 
     private void Start()
     {
@@ -39,6 +42,15 @@ public class PlayerMovement : MonoBehaviour
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
         moveDirection = new Vector2(movement.x, movement.y).normalized;
+
+        animator.SetFloat("vertical", movement.y);
+        animator.SetFloat("speed", movement.sqrMagnitude);
+        
+        if (movement.y == 0)
+        {
+            animator.SetFloat("horizontal", movement.x);
+        }
+        else { animator.SetFloat("horizontal", 0);}
 
         //скорость по диагонали
         speed = fixedSpeed;
@@ -63,12 +75,17 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        //отмена управления персонажем при дэше
+        //отмена управления персонажем при дэше и диалогах
         if (isDashing)
         {
             return;
         }
+        if (isDialog)
+        {
 
+            rb.velocity = new Vector2(0, 0);
+            return;
+        }
         //изменение скорости при обычном движении
         rb.velocity = new Vector2(moveDirection.x * speed * Time.fixedDeltaTime * isMoving, moveDirection.y * speed * Time.fixedDeltaTime * isMoving);
     }
