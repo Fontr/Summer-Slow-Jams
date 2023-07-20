@@ -6,15 +6,25 @@ public class EnemyHpSystem : MonoBehaviour
 {
     public int maxHP = 3;
 
+    private SpriteRenderer sprite;
+
+    private void Start()
+    {
+        sprite = gameObject.GetComponent<SpriteRenderer>();
+    }
+
     // Получение урона
     //====================================================================================
-    public void TakingDamage()
+    public IEnumerator TakingDamage()
     {
         maxHP -= 1;
         if (maxHP == 0)
         {
-            Death();
+            StartCoroutine(Death());
         }
+        sprite.color = new Color(1, 0, 0, 0.8f);
+        yield return new WaitForSeconds(0.2f);
+        sprite.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1f);
     }
     //====================================================================================
 
@@ -23,6 +33,7 @@ public class EnemyHpSystem : MonoBehaviour
     //====================================================================================
     public IEnumerator Death()
     {
+        Debug.Log("!!!!");
         yield return null;
     }
     //====================================================================================
