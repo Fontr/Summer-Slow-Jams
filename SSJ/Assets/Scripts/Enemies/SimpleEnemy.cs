@@ -22,8 +22,8 @@ public class SimpleEnemy : MonoBehaviour
     void Start()
     {
         //enemy.rb = GetComponent<Rigidbody2D>();
-        //enemy.player = GameObject.FindWithTag("Player");
         enemy = GetComponent<EnemyClass>();
+        enemy.player = GameObject.FindWithTag("Player");
         enemy.targetPoint = this.transform.position;
         enemy.animator = GetComponent<Animator>();
     }

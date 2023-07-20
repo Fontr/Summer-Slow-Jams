@@ -474,6 +474,7 @@ MonoBehaviour:
   dashSpeed: 15
   dashDuration: 0.2
   dashCooldown: 1
+  isDialog: 0
 --- !u!61 &5099825283853396340
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -540,7 +541,7 @@ MonoBehaviour:
   attackRange: 0.5
   enemyLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 68
   drawAttack: 1
 --- !u!1 &7425515100103250403
 GameObject:
@@ -622,6 +623,13 @@ MonoBehaviour:
   maxHealthPoint: 6
   damageTakingCD: 1
   hpRecoveryCD: 1
+  hpImages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &1722798755163087122
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -150,7 +150,7 @@ MonoBehaviour:
   speed: 3
   EnemyActive: 0
   isDamaging: 0
-  player: {fileID: 7156855475088288469, guid: 1f21477b1f489474c87c7f64499c6c5a, type: 3}
+  player: {fileID: 0}
   rb: {fileID: 6623542703201901992}
   animator: {fileID: 0}
   curPos: {x: 0, y: 0}
@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dc3f8c96261c074bb3299b1e19a3566, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewDist: 15
+  viewDist: 7
   dmRange: 2
   dmCooldown: 0.6
   PRange: 3
