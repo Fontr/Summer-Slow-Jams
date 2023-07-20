@@ -12,9 +12,9 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private Animator animator;
+    [SerializeField] private PlayerMovement player;
     //скорость печати текста
     private float speedTyping = 0.05f;
-    [SerializeField] private Button button;
     void Start()
     {
         sentences = new Queue<string>();
@@ -32,8 +32,8 @@ public class DialogueManager : MonoBehaviour
     public void StartDialogue(Dialogue dialogue)
     {
         dialogueIsActive = true;
+        player.isDialog = true;
         animator.SetBool("isOpen", true);
-        button.gameObject.SetActive(false);
 
         nameText.text = dialogue.name;
 
@@ -85,6 +85,7 @@ public class DialogueManager : MonoBehaviour
     private void EndDialogue()
     {
         dialogueIsActive = false;
+        player.isDialog = false;
         animator.SetBool("isOpen", false);
     }
 }

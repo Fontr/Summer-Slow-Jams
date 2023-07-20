@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class HPEvents : MonoBehaviour
 {
     [SerializeField] private new GameObject gameObject;
@@ -11,6 +11,7 @@ public class HPEvents : MonoBehaviour
     [SerializeField] private float damageTakingCD = 1f;
     [Tooltip(">0.2")]
     [SerializeField] private float hpRecoveryCD = 1f;
+    [SerializeField] private Image[] hpImages = new Image[6];
     private bool damageIsTaking = true, hpIsRecovery = true;
     private SpriteRenderer sprite;
 
@@ -29,12 +30,16 @@ public class HPEvents : MonoBehaviour
     {
         if (damageIsTaking)
         {
-            healthPoint -= 1;
-            if (healthPoint < 1)
+            if (healthPoint == 1)
             {
+                hpImages[healthPoint - 1].gameObject.SetActive(false);
                 PlayerDeath();
                 return;
             }
+
+            hpImages[healthPoint - 1].gameObject.SetActive(false);
+            healthPoint -= 1;
+
             StartCoroutine("HitAnimation");
         }
     }
@@ -43,6 +48,7 @@ public class HPEvents : MonoBehaviour
     {
         if (hpIsRecovery && healthPoint < maxHealthPoint)
         {
+            hpImages[healthPoint].gameObject.SetActive(true);
             healthPoint += 1;
             StartCoroutine("RegenAnimation");
         }
@@ -52,7 +58,7 @@ public class HPEvents : MonoBehaviour
     private IEnumerator HitAnimation()
     {
         damageIsTaking = false;
-        sprite.color = new Color(1, 0, 0, 1f);
+        sprite.color = new Color(1, 0, 0, 0.8f);
         yield return new WaitForSeconds(0.2f);
         sprite.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1f);
         yield return new WaitForSeconds(damageTakingCD - 0.2f);
