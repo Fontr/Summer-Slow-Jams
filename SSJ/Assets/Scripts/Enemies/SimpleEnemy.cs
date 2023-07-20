@@ -10,6 +10,9 @@ public class SimpleEnemy : MonoBehaviour
 
     public float viewDist = 15.0f; // Дальность обзора
 
+    public float dmRange = 3f;
+    public float dmCooldown = 0.6f;
+
     public float PRange = 3f; // Радиус патрулирования
     public float startWaitTime = 3f; // Время ожидания в точке патрулирования
     private float timeBeforePatrol = 5f;
@@ -45,6 +48,8 @@ public class SimpleEnemy : MonoBehaviour
                 enemy.CheckWalls();
                 enemy.MoveToPoint(enemy.targetPoint);
                 timeBeforePatrol = 5f;
+                if (Vector2.Distance(this.transform.position, enemy.player.transform.position) < dmRange && enemy.isDamaging==false) 
+                { StartCoroutine(enemy.Damage(dmCooldown)); }
             }
             else { activationTime -= Time.fixedDeltaTime; }
         }
@@ -54,6 +59,7 @@ public class SimpleEnemy : MonoBehaviour
             if (timeBeforePatrol <= 0f)
             {
                 enemy.Patrol(PRange, startWaitTime);
+                activationTime = 0.75f;
             }
             else { timeBeforePatrol -= Time.fixedDeltaTime; }
         }
