@@ -50,6 +50,7 @@ public class EnemyClass : MonoBehaviour
     //====================================================================================
     public void FollowPlayer(float dist)
     {
+        if (EnemyActive) { dist = 15f; }
         float PLdistance = Vector2.Distance(transform.position, player.transform.position);
         curPos = transform.position;
 
@@ -65,6 +66,12 @@ public class EnemyClass : MonoBehaviour
                 {
                     EnemyActive = true;
                     ChangeAnimation("Activation");
+                    if (gameObject.TryGetComponent(out AudioSource audio)) //!!!!!!!!!!!!!!!!!!
+                    {
+                        transform.localScale = new Vector3(15f, 15f, 0);
+                        gameObject.GetComponent<SpriteRenderer>().color = new Color(0, 1, 1, 1f);
+                        audio.Play(0);
+                    }
                 }
 
                 PlayerFound = true;
@@ -122,12 +129,15 @@ public class EnemyClass : MonoBehaviour
 
     // ”дар в ближнем бою
     //====================================================================================
-    public IEnumerator Damage(float dmCd)
+    public IEnumerator Damage(float dmCd, float range)
     {
         isDamaging = true;
         ChangeAnimation("Damage");
         yield return new WaitForSeconds(0.60f);
-        player.GetComponentInChildren<HPEvents>().HPLoss();
+        if (Vector2.Distance(transform.position, player.transform.position) < range)
+        {
+            player.GetComponentInChildren<HPEvents>().HPLoss();
+        }
         ChangeAnimation("Walk");
         yield return new WaitForSeconds(dmCd);
         isDamaging = false;
