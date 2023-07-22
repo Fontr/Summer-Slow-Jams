@@ -33,8 +33,9 @@ public class EnemyHpSystem : MonoBehaviour
     //====================================================================================
     public IEnumerator Death()
     {
-        Debug.Log("!!!!");
-        yield return null;
+        gameObject.GetComponent<Animator>().Play("Death");
+        yield return new WaitForSeconds(0.6f);
+        Destroy(gameObject);
     }
     //====================================================================================
 }

@@ -18,6 +18,7 @@ public class SimpleEnemy : MonoBehaviour
     private float timeBeforePatrol = 5f;
     private float activationTime = 0.75f;
 
+
     //====================================================================================
     void Start()
     {
@@ -33,36 +34,39 @@ public class SimpleEnemy : MonoBehaviour
     //====================================================================================
     void FixedUpdate()
     {
-        if (!enemy.EnemyActive) { enemy.ChangeAnimation("Idle(NotActive)"); }
-
-        enemy.FollowPlayer(viewDist);
-
-        if (Vector2.Distance(this.transform.position, enemy.targetPoint) < 0.4f)
+        if (!enemy.animator.GetCurrentAnimatorStateInfo(0).IsName("Death"))
         {
-            enemy.PlayerFound = false;
-        }
+            if (!enemy.EnemyActive) { enemy.ChangeAnimation("Idle(NotActive)"); }
 
-        if (enemy.PlayerFound)
-        {
-            if (activationTime <= 0f)
+            enemy.FollowPlayer(viewDist);
+
+            if (Vector2.Distance(this.transform.position, enemy.targetPoint) < 0.4f)
             {
-                enemy.CheckWalls();
-                enemy.MoveToPoint(enemy.targetPoint);
-                timeBeforePatrol = 5f;
-                if (Vector2.Distance(this.transform.position, enemy.player.transform.position) < dmRange && enemy.isDamaging==false) 
-                { StartCoroutine(enemy.Damage(dmCooldown)); }
+                enemy.PlayerFound = false;
             }
-            else { activationTime -= Time.fixedDeltaTime; }
-        }
 
-        if (enemy.PlayerFound == false && enemy.EnemyActive)
-        {
-            if (timeBeforePatrol <= 0f)
+            if (enemy.PlayerFound)
             {
-                enemy.Patrol(PRange, startWaitTime);
-                activationTime = 0.75f;
+                if (activationTime <= 0f)
+                {
+                    enemy.CheckWalls();
+                    enemy.MoveToPoint(enemy.targetPoint);
+                    timeBeforePatrol = 5f;
+                    if (Vector2.Distance(transform.position, enemy.player.transform.position) < dmRange && enemy.isDamaging == false)
+                    { StartCoroutine(enemy.Damage(dmCooldown,dmRange)); }
+                }
+                else { activationTime -= Time.fixedDeltaTime; }
             }
-            else { timeBeforePatrol -= Time.fixedDeltaTime; }
+
+            if (enemy.PlayerFound == false && enemy.EnemyActive)
+            {
+                if (timeBeforePatrol <= 0f)
+                {
+                    enemy.Patrol(PRange, startWaitTime);
+                    activationTime = 0.75f;
+                }
+                else { timeBeforePatrol -= Time.fixedDeltaTime; }
+            }
         }
     }
     //====================================================================================
