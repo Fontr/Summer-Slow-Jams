@@ -24,7 +24,7 @@ public class Bullet : MonoBehaviour
 
         if (collision.tag == "Enemy")
         {
-            collision.GetComponent<EnemyHpSystem>().StartCoroutine("TakingDamage");
+            collision.GetComponentInParent<EnemyHpSystem>().StartCoroutine("TakingDamage");
         }
         if (collision.tag != "Player" && collision.tag != "zPos" && collision.tag != "DialogueTrigger")
         {
