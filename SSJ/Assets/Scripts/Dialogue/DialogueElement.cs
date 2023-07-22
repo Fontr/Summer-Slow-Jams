@@ -1,20 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.PackageManager;
-using UnityEditor.Presets;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class DialogueElement : MonoBehaviour
 {
     [SerializeField] private Dialogue dialogue;
     private bool pressE = false;
+    [SerializeField] private Animator animator;
+    [SerializeField] private TextMeshProUGUI popupPrompt;
 
+    private void Start()
+    {
+        animator = GameObject.Find("playerEmotes").GetComponent<Animator>();
+    }
     private void FixedUpdate()
     {
         //срабатывание диалога при нажатии клавиши в триггер-зоне
         if (pressE && Input.GetKey(KeyCode.E))
         {
+            animator.SetBool("question", false);
+            animator.SetBool("dialogue", true);
             TriggerDialogue();
             gameObject.SetActive(false);
         }
@@ -23,9 +27,9 @@ public class DialogueElement : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
+            animator.SetBool("question", true);
+            popupPrompt.gameObject.SetActive(true);
             pressE = true;
-            Debug.Log("Нажми E чтобы взаимодействовать");
-
         }
     }
 
@@ -33,8 +37,9 @@ public class DialogueElement : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
+            animator.SetBool("question", false);
+            popupPrompt.gameObject.SetActive(false);
             pressE = false;
-            Debug.Log("Можешь не нажимать");
         }
     }
     public void TriggerDialogue()

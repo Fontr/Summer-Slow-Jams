@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,11 +12,13 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private Animator animator;
     [SerializeField] private PlayerMovement player;
+    private Animator playerAnimator;
     //скорость печати текста
     private float speedTyping = 0.05f;
     void Start()
     {
         sentences = new Queue<string>();
+        playerAnimator = GameObject.Find("playerEmotes").GetComponent<Animator>();
     }
 
     void Update()
@@ -84,6 +85,7 @@ public class DialogueManager : MonoBehaviour
     //конец диалога
     private void EndDialogue()
     {
+        playerAnimator.SetBool("dialogue", false);
         dialogueIsActive = false;
         player.isDialog = false;
         animator.SetBool("isOpen", false);

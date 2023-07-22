@@ -3,14 +3,14 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     [SerializeField] private float timeDestroy = 3f;
-    [SerializeField] private float speed = 3f;
-    [SerializeField] private Rigidbody2D rb;
-
+    [SerializeField] private float speed = 5f;
+    private Rigidbody2D rb;
+    private Transform transformGun;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
-        Vector3 difference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+        transformGun = GameObject.Find("GunPoint").GetComponent<Transform>();
+        Vector3 difference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transformGun.position;
         float rotateZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, rotateZ-90f);
 
@@ -22,11 +22,11 @@ public class Bullet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
 
-        /*if (collision.tag == "Enemy")
+        if (collision.tag == "Enemy")
         {
-            
-        }*/
-        if (collision.tag != "Player" && collision.tag != "zPos")
+            collision.GetComponent<EnemyHpSystem>().StartCoroutine("TakingDamage");
+        }
+        if (collision.tag != "Player" && collision.tag != "zPos" && collision.tag != "DialogueTrigger")
         {
             DestroyBullet();
         }

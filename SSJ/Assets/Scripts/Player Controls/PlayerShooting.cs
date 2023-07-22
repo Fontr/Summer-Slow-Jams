@@ -13,7 +13,7 @@ public class PlayerShooting : MonoBehaviour
         {
             return;
         }
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKey(KeyCode.Mouse0))
         {
             Instantiate(bullet, transform.position, Quaternion.identity);
             StartCoroutine("ShootingCD");

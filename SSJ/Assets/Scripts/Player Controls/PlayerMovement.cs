@@ -1,10 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.U2D;
-using UnityEngine.UIElements;
-using static UnityEditor.Rendering.FilterWindow;
+
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -29,7 +25,11 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
     }
-
+    
+    private void LateUpdate()
+    {
+        transform.position = new Vector3(Mathf.Round(transform.position.x * 16) / 16, Mathf.Round(transform.position.y * 16) / 16, transform.position.z);
+    }
     void Update()
     {
         //отмена управления персонажем при дэше

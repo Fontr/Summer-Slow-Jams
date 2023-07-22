@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class HPEvents : MonoBehaviour
 {
     [SerializeField] private new GameObject gameObject;
+    [SerializeField] private GameObject deathPanel;
     [SerializeField] private int maxHealthPoint = 6;
     private int healthPoint;
     [Tooltip(">0.2")]
@@ -79,7 +80,7 @@ public class HPEvents : MonoBehaviour
     //смерть персонажа
     public void PlayerDeath()
     {
-        sprite.color = new Color(0, 0, 0, 1f);
-        Debug.Log("ты сдох");
+        Time.timeScale = 1f;
+        deathPanel.SetActive(true);
     }
 }
